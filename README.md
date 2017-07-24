@@ -5,8 +5,8 @@
 
 ### Existing
 
-1. conkyrc (require Conky)
-1. default face (used by desktop)
+1. `conkyrc` (require Conky)
+1. `.face` (used by desktop)
 
 
 ## Bash
@@ -29,7 +29,7 @@ Version: 2.13.3
     + Misc: `st`, `co`, `br`, `rs`, `uptags`, `downtags`, `ci`, `find`
     + Complete yet compressed log: `lg`
     + Latest commit shorthand: `latest`
-1. Editor: vim
+1. Editor: `vim`
 
 ### To modify on installation
 
@@ -42,14 +42,14 @@ Version: 8.0
 
 ### Existing
 
-1. Default config: _vimrc_
-2. Extension manager: Pathogen
-3. Plugins/Bundle: bclose, python identatation, NERDTree, NERDCommenter, vim-autoformat, vim-numbertoggle
+1. Default config: `vimrc`
+2. Extension manager: `Pathogen`
+3. Plugins/Bundle: `bclose`, python identation, `NERDTree`, `NERDCommenter`, `vim-autoformat`, `vim-numbertoggle`
 
 ### To install
 
-1. YouCompleteMe
-2. Rust.vim
+1. Bundle `YouCompleteMe`
+2. Bundle `Rust.vim`
 
 
 ## Tmux
@@ -63,6 +63,7 @@ Version: 2.5
     + `<prefix>r`: reload user conf (require `~/.tmux.conf`)
     + `<prefix><C-s>`: synchronise panes
     + `<prefix>` + `h` `j` `k` `l`: move between panes
+    + others...
 1. Window & Pane base index is 1
 1. Monitor and visual activity enabled
 1. Vi bindings for buffer mode
