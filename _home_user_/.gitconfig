@@ -1,0 +1,16 @@
+[user]
+    email = you@example.com
+    name = My name
+[core]
+    editor = vim
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    rs = reset
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    latest = show --name-only --oneline HEAD
+    uptags = push --follow-tags
+    downtags = fetch --tags
+    ci = commit
+    find = !git ls-files | grep -i
