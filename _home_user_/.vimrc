@@ -102,14 +102,24 @@ set tabstop=4
 set lbr
 set tw=500
 
-set ai  " Auto indent
-set si  " Smart indent
-set wrap  " Wrap lines
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
 
 set number
 
-" Split row, command mode (revert command of <Shift-j>
-map m i<C-m><ESC>
+" Split row, command mode
+map m i<C-m><ESC>l
+
+" Search what is selected in visual mode with '//'
+" (http://vim.wikia.com/wiki/Search_for_visually_selected_text)
+vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
+
+" Fill replace ex with word under the cursor with '\s'
+" Match only word, not any sequence made of it
+" global to the file
+" http://vim.wikia.com/wiki/VimTip464
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
 
 " Code
 " folding
@@ -143,7 +153,7 @@ func! DeleteTrailingWS()
   %s/\s\+$//ge
   exe "normal `z"
 endfunc
-autocmd BufWrite *.py :call DeleteTrailingWS()
+" autocmd BufWrite *.py :call DeleteTrailingWS()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -158,6 +168,7 @@ filetype plugin indent on
 
 """""""""""""""
 " YouCompleteMe
+let g:ycm_rust_src_path="/home/v/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -167,11 +178,15 @@ map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "autocmd BufEnter * NERDTreeMirror
 " CTRL-t to toggle tree view
 nmap <silent> <C-t> :NERDTreeToggle<CR>
-" Set \r to put the cursor to the nerdtree
+" Set F2 to put the cursor to the nerdtree
 nmap <silent> <leader>r :NERDTreeFind<CR>
 
-""""""""""
+"""""""""""""""
 " NERDCommenter
+
+""""""""""
+" vim-autoformat
+let g:formatter_yapf_style='pep8'
 
 """"""""
 " Bclose
