@@ -44,14 +44,15 @@ Version: 8.0
 
 1. Default config: `vimrc`
 2. Extension manager: `Pathogen`
-3. Plugins/Bundle: `bclose`, python indentation, `NERDTree`, `NERDCommenter`, `vim-autoformat`, `vim-numbertoggle`, `lightline`
+3. Plugins/Bundle: `bclose`, python indentation, `NERDTree`, `NERDCommenter`, `vim-autoformat`, `vim-numbertoggle`, `lightline`, `vim-unimpaired`
 4. Bindings:
     + `<C-t>`: toggle NERDTree
     + `<leader>r`: find current in NERDTree
     + `<leader>s`: replace word under the cursor
     + VISUAL MODE + `m`: split row at new line
     + VISUAL MODE + `//`: find word
-    + `<space>`: toggle folding
+    + `G`: toggle folding
+    + `<C-Up>`, `<C-Down>`: bubble rows
 
 ### To install
 

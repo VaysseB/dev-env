@@ -108,6 +108,7 @@ set wrap "Wrap lines
 
 set number
 
+
 " Split row, command mode
 map m i<C-m><ESC>l
 
@@ -125,22 +126,25 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
 " folding
 set foldmethod=indent
 set foldlevel=99
-nnoremap <space> za
+nnoremap Q za
 
 " Python - PEP8
-autocmd BufRead,BufNewFile *.py set tabstop=4
-autocmd BufRead,BufNewFile *.py set softtabstop=4
-autocmd BufRead,BufNewFile *.py set shiftwidth=4
-autocmd BufRead,BufNewFile *.py set textwidth=79
-autocmd BufRead,BufNewFile *.py set expandtab
-autocmd BufRead,BufNewFile *.py set autoindent
-autocmd BufRead,BufNewFile *.py set fileformat=unix
-autocmd BufRead,BufNewFile *.py set encoding=utf-8
+autocmd BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix |
+    \ set encoding=utf-8
 
 " Web
-autocmd BufRead,BufNewFile *.js, *.html, *.css set tabstop=2
-autocmd BufRead,BufNewFile *.js, *.html, *.css set softtabstop=2
-autocmd BufRead,BufNewFile *.js, *.html, *.css set shiftwidth=2
+autocmd BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2 |
+    \ set encoding=utf-8
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -168,30 +172,44 @@ filetype plugin indent on
 
 """""""""""""""
 " YouCompleteMe
+" https://github.com/Valloric/YouCompleteMe
+"let g:ycm_rust_src_path="/home/v/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 """"""""""
 " NERDtree
-"autocmd VimEnter * NERDTree
-"autocmd BufEnter * NERDTreeMirror
-" CTRL-t to toggle tree view
+" https://github.com/scrooloose/nerdtree
 nmap <silent> <C-t> :NERDTreeToggle<CR>
-" Set F2 to put the cursor to the nerdtree
 nmap <silent> <leader>r :NERDTreeFind<CR>
+let NERDTreeIgnore=['\.pyc$', '\~$']
 
 """""""""""""""
 " NERDCommenter
+" https://github.com/scrooloose/nerdcommenter
 
 """"""""""
 " vim-autoformat
+" https://github.com/Chiel92/vim-autoformat
 let g:formatter_yapf_style='pep8'
 
 """"""""
 " Bclose
+" http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window
 let b:bclose_multiple=0
 
 """"""""
 " LightLine
+" https://github.com/itchyny/lightline.vim
 set laststatus=2
 let g:lightline = { 'colorscheme': 'wombat' }
+
+""""""""
+" Vim-Unimpaired
+" https://github.com/tpope/vim-unimpaired
+" Single line
+nmap <C-Up> [e
+nmap <C-Down> ]e
+" Multi-lines
+vmap <C-Up> [egv
+vmap <C-Down> ]egv
