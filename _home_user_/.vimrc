@@ -168,7 +168,6 @@ filetype plugin indent on
 
 """""""""""""""
 " YouCompleteMe
-let g:ycm_rust_src_path="/home/v/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -191,3 +190,8 @@ let g:formatter_yapf_style='pep8'
 """"""""
 " Bclose
 let b:bclose_multiple=0
+
+""""""""
+" LightLine
+set laststatus=2
+let g:lightline = { 'colorscheme': 'wombat' }
