@@ -225,3 +225,11 @@ nmap <C-Down> ]e
 " Multi-lines
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
+
+""""""""
+" Vim-Easy-Align
+" https://github.com/junegunn/vim-easy-align
+"Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
