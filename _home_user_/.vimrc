@@ -176,7 +176,7 @@ function s:reset_caps ()
     if has('unix')
         silent execute '!setxkbmap' '-option'
     else
-        silent execute '!reg' 'add' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map'
+        silent execute '!reg' 'delete' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map'
     endif
 endfunction
 
