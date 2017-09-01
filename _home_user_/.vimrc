@@ -20,6 +20,7 @@ let $lang='en_UK'
 " => GVim only
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set guifont=Liberation\ Mono:h9
+set t_Co=256
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -160,6 +161,32 @@ autocmd BufNewFile,BufRead *.js, *.html, *.css
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Keyboard trick
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function s:caps_as_escape ()
+    if has('unix')
+        silent execute '!setxkbmap' '-option' 'caps:escape'
+    else
+        silent execute '!reg' 'add' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map' '/t' 'REG_BINARY' '/d' '00000000000000000200000001003a0000000000'
+    endif
+endfunction
+
+function s:reset_caps ()
+    if has('unix')
+        silent execute '!setxkbmap' '-option'
+    else
+        silent execute '!reg' 'add' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map'
+    endif
+endfunction
+
+autocmd VimEnter * :call s:caps_as_escape()
+autocmd VimLeave * :call s:reset_caps()
+autocmd FocusGained * :call s:caps_as_escape()
+autocmd FocusLost * :call s:reset_caps()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -187,7 +214,7 @@ filetype plugin indent on
 " https://github.com/Valloric/YouCompleteMe
 "let g:ycm_rust_src_path="/home/v/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
 let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+map <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 """"""""""
 " NERDtree
@@ -225,6 +252,14 @@ nmap <C-Down> ]e
 " Multi-lines
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
+
+""""""""
+" Vim-racer for RLS (rust)
+" https://github.com/rust-lang-nursery/rls
+" https://github.com/racer-rust/vim-racer
+" set hidden
+" let g:racer_cmd="/home/v/.cargo/bin/racer"
+" let g:racer_experimental_completer=1
 
 """"""""
 " Vim-Easy-Align
