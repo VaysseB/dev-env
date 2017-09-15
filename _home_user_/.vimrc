@@ -8,6 +8,10 @@ set history=700
 filetype plugin on
 filetype indent on
 
+" Small life savior
+vmap qq <ESC>
+imap qq <ESC>
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -78,7 +82,7 @@ set tm=500
 " Enable syntax highlighting
 syntax enable
 
-colorscheme ron
+colorscheme desert
 
 set background=light
 set background=dark
