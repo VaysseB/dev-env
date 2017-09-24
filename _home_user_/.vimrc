@@ -17,8 +17,17 @@ imap qq <ESC>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim setup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set langmenu=en_UK
-let $lang='en_UK'
+set t_Co=256
+if has("gui_running")
+  if has("gui_gtk2") || has("gui_gtk3")
+    set guifont=Liberation\ Mono\ 9
+  elseif has("gui_photon")
+    set guifont=Liberation\ Mono:h9:cDEFAULT
+  else
+    set guifont=Liberation_Mono:h9:cDEFAULT
+  endif
+endif
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => GVim only
