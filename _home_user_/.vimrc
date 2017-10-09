@@ -12,6 +12,8 @@ filetype indent on
 vmap qq <ESC>
 imap qq <ESC>
 
+" Pinky savior
+let mapleader = ' '
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -22,18 +24,11 @@ if has("gui_running")
   if has("gui_gtk2") || has("gui_gtk3")
     set guifont=Liberation\ Mono\ 9
   elseif has("gui_photon")
-    set guifont=Liberation\ Mono:h9:cDEFAULT
+    set guifont=Liberation\ Mono:h9
   else
-    set guifont=Liberation_Mono:h9:cDEFAULT
+    set guifont=Liberation_Mono:h9
   endif
 endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => GVim only
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set guifont=Liberation\ Mono:h9
-set t_Co=256
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -93,9 +88,6 @@ syntax enable
 
 colorscheme desert
 
-set background=light
-set background=dark
-
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
 
@@ -136,7 +128,7 @@ set wrap "Wrap lines
 set number
 
 " Split row, command mode
-map m i<C-m><ESC>l
+map <leader>m i<C-m><ESC>l
 
 " Search what is selected in visual mode with '//'
 " (http://vim.wikia.com/wiki/Search_for_visually_selected_text)
@@ -147,6 +139,7 @@ vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
 " global to the file
 " http://vim.wikia.com/wiki/VimTip464
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
+nnoremap <Leader>S :%s/\<<C-r><C-w>\>//g<Left><Left>
 
 " Code
 " folding
@@ -166,7 +159,8 @@ autocmd BufNewFile,BufRead *.py
     \ set encoding=utf-8
 
 " Web
-autocmd BufNewFile,BufRead *.js,*.html,*.css
+autocmd BufNewFile,BufRead *.vue setfiletype html
+autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth=2 |
@@ -206,13 +200,13 @@ autocmd FocusLost * :call s:reset_caps()
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Delete trailing white space on save, useful for Python and CoffeeScript ;)
+" Delete trailing white space on save
 func! DeleteTrailingWS()
   exe "normal mz"
   %s/\s\+$//ge
   exe "normal `z"
 endfunc
-" autocmd BufWrite *.py :call DeleteTrailingWS()
+autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue :call DeleteTrailingWS()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
