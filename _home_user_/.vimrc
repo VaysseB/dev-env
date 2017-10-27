@@ -308,8 +308,15 @@ vmap <C-Down> ]egv
 
 """"""""
 " Vim-Easy-Align
+" Tabular/Column alignement
 " https://github.com/junegunn/vim-easy-align
 "Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+"""""""
+" Vim-Abolish
+" Change cases (MixedCase, snake_case, UPPER_CASE...)
+" https://github.com/tpope/vim-abolish/blob/master/plugin/abolish.vim
+let g:abolish_save_file=expand("/dev/null")
