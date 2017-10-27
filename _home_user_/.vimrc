@@ -17,6 +17,23 @@ let mapleader = ' '
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Security / Best practices
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <Up> :echo 'Arrow key disabled'<CR>
+nnoremap <Down> :echo 'Arrow key disabled'<CR>
+nnoremap <Left> :echo 'Arrow key disabled'<CR>
+nnoremap <Right> :echo 'Arrow key disabled'<CR>
+vnoremap <Up> :echo 'Arrow key disabled'<CR>
+vnoremap <Down> :echo 'Arrow key disabled'<CR>
+vnoremap <Left> :echo 'Arrow key disabled'<CR>
+vnoremap <Right> :echo 'Arrow key disabled'<CR>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim setup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set t_Co=256
@@ -127,8 +144,25 @@ set wrap "Wrap lines
 
 set number
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Custom commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Start-up settings
+" Open / Edit VIMRC
+nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+" Source / Reload VIMRC
+nnoremap <leader>sv :source $MYVIMRC<CR>
+
+" Fast commands
+nnoremap <leader>w :w<CR>
+nnoremap <leader>W :w!<CR>
+nnoremap <leader>n :bn<CR>
+nnoremap <leader>p :bp<CR>
+
 " Split row, command mode
-map <leader>m i<C-m><ESC>l
+nnoremap <leader>m i<C-m><ESC>l
 
 " Search what is selected in visual mode with '//'
 " (http://vim.wikia.com/wiki/Search_for_visually_selected_text)
@@ -174,21 +208,21 @@ autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue
 " => Keyboard trick
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function s:caps_as_escape ()
+func! s:caps_as_escape ()
     if has('unix')
         silent execute '!setxkbmap' '-option' 'caps:escape'
     else
         silent execute '!reg' 'add' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map' '/t' 'REG_BINARY' '/d' '00000000000000000200000001003a0000000000'
     endif
-endfunction
+endfunc
 
-function s:reset_caps ()
+func! s:reset_caps ()
     if has('unix')
         silent execute '!setxkbmap' '-option'
     else
         silent execute '!reg' 'delete' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map'
     endif
-endfunction
+endfunc
 
 autocmd VimEnter * :call s:caps_as_escape()
 autocmd VimLeave * :call s:reset_caps()
@@ -202,9 +236,9 @@ autocmd FocusLost * :call s:reset_caps()
 
 " Delete trailing white space on save
 func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z"
 endfunc
 autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue :call DeleteTrailingWS()
 
@@ -246,6 +280,7 @@ let g:formatter_yapf_style='pep8'
 " Bclose
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window
 let b:bclose_multiple=0
+nnoremap <leader>b :Bclose<CR>
 
 """"""""
 " LightLine
