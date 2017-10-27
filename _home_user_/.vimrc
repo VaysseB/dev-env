@@ -164,6 +164,11 @@ nnoremap <leader>p :bp<CR>
 " Split row, command mode
 nnoremap <leader>m i<C-m><ESC>l
 
+" Uppercase in insert mode
+inoremap <C-u> <ESC>mzgUiw`za
+" Lowercase in insert mode
+inoremap <C-l> <ESC>mzguiw`za
+
 " Search what is selected in visual mode with '//'
 " (http://vim.wikia.com/wiki/Search_for_visually_selected_text)
 vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
