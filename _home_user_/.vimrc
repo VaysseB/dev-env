@@ -146,7 +146,7 @@ set number
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Custom commands
+" => Leader commands and shortcuts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Start-up settings
@@ -161,8 +161,29 @@ nnoremap <leader>W :w!<CR>
 nnoremap <leader>n :bn<CR>
 nnoremap <leader>p :bp<CR>
 
-" Split row, command mode
+" Insert a line above the cursor, do not update indentation of current line
+nnoremap <leader>t mzO<ESC>`z
+
+" Insert a line below the cursor
+nnoremap <leader>h mzA<CR><ESC>`z
+
+" Split row at cursor, with past-cursor as new line indented 
 nnoremap <leader>m i<C-m><ESC>l
+
+" Fill replace ex with word under the cursor with '\s'
+" Match only word, not any sequence made of it
+" global to the file
+" http://vim.wikia.com/wiki/VimTip464
+nnoremap <leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
+nnoremap <leader>S :%s/\<<C-r><C-w>\>//g<Left><Left>
+
+" Open explorer at file folder
+nnoremap <leader>e :Explore "expand('%:p:h')"<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Custom commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Uppercase in insert mode
 inoremap <C-u> <ESC>mzgUiw`za
@@ -173,15 +194,12 @@ inoremap <C-l> <ESC>mzguiw`za
 " (http://vim.wikia.com/wiki/Search_for_visually_selected_text)
 vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
 
-" Fill replace ex with word under the cursor with '\s'
-" Match only word, not any sequence made of it
-" global to the file
-" http://vim.wikia.com/wiki/VimTip464
-nnoremap <Leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
-nnoremap <Leader>S :%s/\<<C-r><C-w>\>//g<Left><Left>
 
-" Code
-" folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Code prettier
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Folding
 set foldmethod=indent
 set foldlevel=99
 nnoremap Q za
@@ -229,10 +247,10 @@ func! s:reset_caps ()
     endif
 endfunc
 
-autocmd VimEnter * :call s:caps_as_escape()
-autocmd VimLeave * :call s:reset_caps()
-autocmd FocusGained * :call s:caps_as_escape()
-autocmd FocusLost * :call s:reset_caps()
+" autocmd VimEnter * :call s:caps_as_escape()
+" autocmd VimLeave * :call s:reset_caps()
+" autocmd FocusGained * :call s:caps_as_escape()
+" autocmd FocusLost * :call s:reset_caps()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -270,7 +288,7 @@ map <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " https://github.com/scrooloose/nerdtree
 nmap <silent> <C-t> :NERDTreeToggle<CR>
 nmap <silent> <leader>r :NERDTreeFind<CR>
-let NERDTreeIgnore=['\.pyc$', '\~$']
+let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
 
 """""""""""""""
 " NERDCommenter
@@ -286,6 +304,7 @@ let g:formatter_yapf_style='pep8'
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window
 let b:bclose_multiple=0
 nnoremap <leader>b :Bclose<CR>
+vnoremap <leader>b :Bclose<CR>
 
 """"""""
 " LightLine
@@ -325,3 +344,12 @@ nmap ga <Plug>(EasyAlign)
 " Change cases (MixedCase, snake_case, UPPER_CASE...)
 " https://github.com/tpope/vim-abolish/blob/master/plugin/abolish.vim
 let g:abolish_save_file=expand("/dev/null")
+
+"""""""
+" MPage
+" https://github.com/vim-scripts/MPage
+
+"""""""
+" Session Man
+" https://github.com/vim-scripts/sessionman.vim
+let g:sessionman_save_on_exit=0
