@@ -45,6 +45,9 @@ if has("gui_running")
   else
     set guifont=Liberation_Mono:h9
   endif
+
+  set lines=42
+  set columns=142
 endif
 
 
@@ -184,6 +187,9 @@ nnoremap <leader>e :Explore "expand('%:p:h')"<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Clear highlighting until next search
+nnoremap <C-l> :noh<CR><C-l>
 
 " Uppercase in insert mode
 inoremap <C-u> <ESC>mzgUiw`za
