@@ -147,6 +147,8 @@ set wrap "Wrap lines
 
 set number
 
+set listchars=eol:$,tab:>-,trail:#,nbsp:%,extends:>,precedes:<
+set nolist
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Leader commands and shortcuts
@@ -190,6 +192,23 @@ nnoremap <leader>e :Explore "expand('%:p:h')"<CR>
 
 " Clear highlighting until next search
 nnoremap <C-l> :noh<CR><C-l>
+
+" Toggle visibility of whitespaces
+function! ToggleWhitespaceVisibility()
+    if !exists("g:toggle_ws_visible")
+        let g:toggle_ws_visible = 1
+    endif
+    
+    if g:toggle_ws_visible == 1
+        execute("silent set list")
+        let g:toggle_ws_visible = 0
+    else
+        execute("silent set nolist")
+        let g:toggle_ws_visible = 1
+    endif
+endfunction
+command! ToggleWS call ToggleWhitespaceVisibility()
+nnoremap <silent> <C-s> :ToggleWS<CR>
 
 " Uppercase in insert mode
 inoremap <C-u> <ESC>mzgUiw`za
@@ -277,6 +296,11 @@ autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue :call DeleteTrailingWS()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
 
 """"""""""
+" netrw
+let g:netrw_liststyle = 3 " tree-view
+let g:netrw_banner = 0    " hide banner
+
+""""""""""
 " pathogen
 execute pathogen#infect()
 syntax on
@@ -359,3 +383,9 @@ let g:abolish_save_file=expand("/dev/null")
 " Session Man
 " https://github.com/vim-scripts/sessionman.vim
 let g:sessionman_save_on_exit=0
+
+
+"""""""
+" CppDev (Own plugin)
+nnoremap <silent> <leader>tt :ToggleHS<CR>
+vnoremap <silent> <leader>tt :ToggleHS<CR>
