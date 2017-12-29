@@ -242,6 +242,7 @@ autocmd BufNewFile,BufRead *.py
 
 " Web
 autocmd BufNewFile,BufRead *.vue setfiletype html
+autocmd BufNewFile,BufRead *.jsm,*.jsx setfiletype javascript
 autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue
     \ set tabstop=2 |
     \ set softtabstop=2 |
@@ -316,8 +317,8 @@ map <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 """"""""""
 " NERDtree
 " https://github.com/scrooloose/nerdtree
-nmap <silent> <C-t> :NERDTreeToggle<CR>
-nmap <silent> <leader>r :NERDTreeFind<CR>
+nnoremap <silent> <C-t> :NERDTreeToggle<CR>
+nnoremap <silent> <leader>r :NERDTreeFind<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
 
 """""""""""""""
@@ -346,11 +347,11 @@ let g:lightline = { 'colorscheme': 'wombat' }
 " Vim-Unimpaired
 " https://github.com/tpope/vim-unimpaired
 " Single line
-nmap <C-Up> [e
-nmap <C-Down> ]e
+nnoremap <C-Up> [e
+nnoremap <C-Down> ]e
 " Multi-lines
-vmap <C-Up> [egv
-vmap <C-Down> ]egv
+vnoremap <C-Up> [egv
+vnoremap <C-Down> ]egv
 
 """"""""
 " Vim-racer for RLS (rust)
@@ -365,9 +366,9 @@ vmap <C-Down> ]egv
 " Tabular/Column alignement
 " https://github.com/junegunn/vim-easy-align
 "Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+xnoremap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
 
 """""""
 " Vim-Abolish
