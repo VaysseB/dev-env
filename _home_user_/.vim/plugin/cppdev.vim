@@ -26,7 +26,7 @@ function! s:open_or_edit(path)
 endfunction
 
 function! cppdev#ToggleToHeader()
-    let stripname = expand("%:p:h") . "/" . substitute(expand("%:p:t"), "." . expand("%:e"), "", "")
+    let stripname = expand("%:p:h") . "/" . substitute(expand("%:p:t"), "\\." . expand("%:e"), "", "")
 
     if filereadable(stripname . ".h")
         call s:open_or_edit(stripname . ".h")
@@ -36,7 +36,7 @@ function! cppdev#ToggleToHeader()
 endfunction
 
 function! cppdev#ToggleToSource()
-    let stripname = expand("%:p:h") . "/" . substitute(expand("%:p:t"), "." . expand("%:e"), "", "")
+    let stripname = expand("%:p:h") . "/" . substitute(expand("%:p:t"), "\\." . expand("%:e"), "", "")
 
     if filereadable(stripname . ".cpp")
         call s:open_or_edit(stripname . ".cpp")
