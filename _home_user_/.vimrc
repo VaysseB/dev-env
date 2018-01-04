@@ -5,15 +5,12 @@
 set history=700
 
 " Enable filetype plugins
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 
-" Small life savior
-vmap qq <ESC>
-imap qq <ESC>
-
-" Pinky savior
-let mapleader = ' '
+""""""""""
+" pathogen
+execute pathogen#infect()
+syntax on
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -153,6 +150,13 @@ set nolist
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Leader commands and shortcuts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Small life savior
+vmap qq <ESC>
+imap qq <ESC>
+
+" Pinky savior
+let mapleader = ' '
 
 " Start-up settings
 " Open / Edit VIMRC
@@ -301,11 +305,6 @@ autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue :call DeleteTrailingWS()
 let g:netrw_liststyle = 3 " tree-view
 let g:netrw_banner = 0    " hide banner
 
-""""""""""
-" pathogen
-execute pathogen#infect()
-syntax on
-filetype plugin indent on
 
 """""""""""""""
 " YouCompleteMe
@@ -385,6 +384,17 @@ let g:abolish_save_file=expand("/dev/null")
 " https://github.com/vim-scripts/sessionman.vim
 let g:sessionman_save_on_exit=0
 
+"""""""
+" CtrlP
+" Fuzzy file search
+" https://github.com/ctrlpvim/ctrlp.vim.git
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|suo|opensdf|sdf|vspscc|filters)$',
+  \ }
+let g:ctrlp_root_markers = [ '\v\.sln' ]
 
 """""""
 " CppDev (Own plugin)
