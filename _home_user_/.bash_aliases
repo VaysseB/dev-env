@@ -1,5 +1,4 @@
 
-
 #--------------------------------------
 # Créer un dossier $PWD/_save/saveN (avec N un nombre)
 # $1, optionel=dossier courant -> dossier à sauvegarder
@@ -165,3 +164,5 @@ function full_update() {
 	sudo pip3 freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U
 	sudo yaourt -Syu
 }
+
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
