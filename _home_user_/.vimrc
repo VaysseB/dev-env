@@ -231,7 +231,6 @@ vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
 " Folding
 set foldmethod=indent
 set foldlevel=99
-nnoremap Q za
 
 " Python - PEP8
 autocmd BufNewFile,BufRead *.py
@@ -247,7 +246,7 @@ autocmd BufNewFile,BufRead *.py
 " Web
 autocmd BufNewFile,BufRead *.vue setfiletype html
 autocmd BufNewFile,BufRead *.jsm,*.jsx setfiletype javascript
-autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue
+autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue,*.ts,*.json
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth=2 |
@@ -293,7 +292,7 @@ func! DeleteTrailingWS()
     %s/\s\+$//ge
     exe "normal `z"
 endfunc
-autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue :call DeleteTrailingWS()
+autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue,*.json,*.ts :call DeleteTrailingWS()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -391,7 +390,7 @@ let g:sessionman_save_on_exit=0
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'dir':  '\v([\/]\.(git|hg|svn)|node_modules)$',
   \ 'file': '\v\.(exe|so|dll|suo|opensdf|sdf|vspscc|filters)$',
   \ }
 let g:ctrlp_root_markers = [ '\v\.sln' ]
