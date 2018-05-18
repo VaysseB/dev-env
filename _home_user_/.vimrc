@@ -48,8 +48,7 @@ if has("gui_running")
 endif
 
 if exists('+colorcolumn')
-  set colorcolumn=80
-  highlight ColorColumn ctermbg=lightgrey guibg=#8c7269
+  let &colorcolumn="80,".join(range(120,999),",")
 else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
@@ -111,6 +110,8 @@ set tm=500
 syntax enable
 
 colorscheme desert
+
+highlight ColorColumn ctermbg=lightgrey guibg=#8c7269
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
