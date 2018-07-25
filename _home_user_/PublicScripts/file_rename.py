@@ -11,6 +11,10 @@ import logging
 import logging.config
 
 
+DEBUG_MATCH = False
+DEBUG_EXPAND = False
+
+
 logging.config.dictConfig(dict(
     version=1,
     formatters={
@@ -20,12 +24,12 @@ logging.config.dictConfig(dict(
         "h_console": {
             "class": "logging.StreamHandler",
             "formatter": "f_console",
-            "level": logging.INFO
+            "level": logging.DEBUG
         }
     },
     root={
         'handlers': ['h_console'],
-        'level': logging.INFO
+        'level': logging.DEBUG
     }
 ))
 logger = logging.getLogger(__name__)
@@ -40,6 +44,7 @@ def join_str(args) -> str:
 class NameFormatter(string.Formatter):
     def __init__(self):
         super().__init__()
+        self.to_underscore_re = re.compile("[-._ \t\n\v]+")
 
 
     def check_unused_args(self, used_args, args, kwargs):
@@ -55,7 +60,10 @@ class NameFormatter(string.Formatter):
         if spec == "c":
             return (value or '').capitalize()
         elif spec == "w":
-            return (value or '').replace(" ", "_").strip()
+            return self.to_underscore_re.sub("_", value or '').strip()
+        elif spec == "t":
+            parts = self.to_underscore_re.split((value or '').strip())
+            return '_'.join(x.capitalize() for x in parts)
         return super().convert_field(value, spec)
 
 
@@ -76,15 +84,22 @@ class Source:
 
     def _load(self, blob):
         self.replace = blob["replace"]
-        self.scan_exprs = tuple(re.compile(join_str(x)) for x in blob["scan"])
         self.rename_exprs = tuple(join_str(x) for x in blob["rename"])
+        self.scan_exprs = []
+        try:
+            for parts in blob["scan"]:
+                pattern = join_str(parts)
+                self.scan_exprs.append(re.compile(pattern))
+        except re.error as error:
+            logger.error("Cannot compile '{}'".format(pattern))
+            raise error
 
 
 class SourceFinder:
     PATTERN = "*.flrnconf.json"
     CONFS_FOLDER = ".flrnconfs"
 
-    def __init__(self, _args):
+    def __init__(self):
         self.sources = []
         srcpath = pathlib.Path(__file__).resolve().parent
         self._load(srcpath.glob(self.PATTERN))
@@ -102,24 +117,58 @@ class SourceFinder:
             for expr in source.scan_exprs:
                 matched = expr.match(path.name)
                 if matched:
+                    if DEBUG_MATCH:
+                        logger.debug("Match '{}' with {}  ->  {}".format(
+                            path.name,
+                            expr.pattern,
+                            matched.groupdict()))
+
                     return (source, matched.groupdict())
+                elif DEBUG_MATCH:
+                    logger.debug("Mismatch '{}' with '{}'".format(
+                        path.name, expr.pattern))
         return (None, None)
 
 
 def try_rename(patterns: [str], infos: dict) -> str:
     nf = NameFormatter()
     for expr in patterns:
+        if DEBUG_EXPAND:
+            logger.debug("try expand '{}' with {}".format(expr, infos))
         try:
             return nf.vformat(expr, (), infos)
         except KeyError:
             continue
 
 
+def unformat_key_part(key: str) -> str:
+    tail_i = key.rfind('_')
+    if tail_i < 0:
+        return key
+
+    tail: str = key[tail_i+1:]
+    if not tail.isdigit():
+        return key
+
+    return key[:tail_i]
+
+
+def merge_parts(infos: dict) -> str:
+    res = collections.defaultdict()
+    res.default_factory = lambda: ''
+    for key, value in infos.items():
+        res[unformat_key_part(key)] += value if value else ''
+    return dict(res)
+
+
 def compose(source: Source, infos: dict) -> str:
+    infos = merge_parts(infos)
+
     for key in source.replace:
         if key in infos:
             value = infos[key]
             infos[key] = source.replace[key].get(value, value)
+
     return try_rename(source.rename_exprs, infos)
 
 
@@ -132,7 +181,7 @@ def scan(paths: [pathlib.Path]) -> pathlib.Path():
 
 class RenamePolicy:
     def __init__(self, args):
-        self.no_confirm = args.no_confirm
+        self.always_confirm = args.confirm
         self.dry_run = args.dry_run
 
 
@@ -145,7 +194,7 @@ class RenamePolicy:
 
 
     def ask(self, path: pathlib.Path, target: pathlib.Path):
-        if self.dry_run or self.no_confirm:
+        if self.dry_run or self.always_confirm:
             return True
         elif target.exists():
             question = f"File already exists, replace (y/N/q) ?"
@@ -161,8 +210,14 @@ class RenamePolicy:
 
 
 def main(args):
+    global DEBUG_MATCH, DEBUG_EXPAND
+
+    DEBUG_MATCH = args.debug_match
+    DEBUG_EXPAND = args.debug_expand
+    logger.setLevel(logging.DEBUG if args.debug else logging.INFO)
+
     policy = RenamePolicy(args)
-    sources = SourceFinder(args)
+    sources = SourceFinder()
 
     for candidate in scan(args.folders):
         source, infos = sources.find(candidate)
@@ -171,13 +226,17 @@ def main(args):
                 logger.info(f"Skipped '{candidate}'")
         else:
             target = compose(source, infos)
+            if target == candidate.name:
+                continue
+
             logger.info(f"Rename '{candidate.name}' to '{target}'")
             policy.rename(candidate, target)
 
 
 def cmd_args():
     pargs = argparse.ArgumentParser(
-        description="Rename files based on predifined rules.")
+        description="Rename files based on predifined rules.",
+        allow_abbrev=False)
 
     pargs.add_argument(
         "folders",
@@ -187,23 +246,49 @@ def cmd_args():
         nargs="*")
 
     pargs.add_argument(
-        "--dry-run",
-        help="Dry run. Output actions to make without doing them.",
+        "-n",  "--dry-run",
+        help="Never confirm rename",
         action="store_true")
 
     pargs.add_argument(
-        "--no-confirm",
-        help="Do not ask to confirm rename. Use with cautious.",
+        "-y", "--confirm",
+        help="Always confirm rename. Use with cautious",
         action="store_true")
 
     pargs.add_argument(
         "--skipped",
-        help="Output skipped file.",
+        help="Show skipped file",
+        action="store_true")
+
+    pargs.add_argument(
+        "--debug",
+        help="Show all debug info",
+        action="store_true")
+
+    pargs.add_argument(
+        "--debug-match",
+        help="Show debug matching info",
+        action="store_true")
+
+    pargs.add_argument(
+        "--debug-expand",
+        help="Show debug expanding info",
+        action="store_true")
+
+    pargs.add_argument(
+        "--cmp",
+        help="Show file testing",
         action="store_true")
 
     args = pargs.parse_args()
     args.folders = tuple(pathlib.Path(x).resolve()
                          for x in args.folders)
+
+    if args.debug:
+        args.debug_match = args.debug_expand = args.debug
+    else:
+        args.debug |= args.debug_match or args.debug_match
+
     return args
 
 

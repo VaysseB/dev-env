@@ -30,6 +30,20 @@ inoremap <Left> <Nop>
 inoremap <Right> <Nop>
 
 
+let g:source_g1_exts = [ "py", "rs" ]
+let g:source_g2_exts = [ "c", "cpp", "h", "hpp", "java" ]
+let g:source_web_exts = [ "css", "vue", "js", "jsx", "html", "ts", "json" ]
+let g:source_g1_exts_str = "*." . join(g:source_g1_exts, ",*.")
+let g:source_g2_exts_str = "*." . join(g:source_g2_exts, ",*.")
+let g:source_web_exts_str = "*." . join(g:source_web_exts, ",*.")
+let g:source_exts_str = g:source_g1_exts_str
+            \ . "," . g:source_g2_exts_str
+            \ . "," . g:source_web_exts_str
+
+let g:tmp_build_exts = [ "*.o", "*~", "*.pyc", "*.pyo", "*.rslib" ]
+let g:tmp_build_exts_str = join(g:tmp_build_exts, ",")
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim setup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -48,9 +62,8 @@ if has("gui_running")
 endif
 
 if exists('+colorcolumn')
-  let &colorcolumn="80,".join(range(120,999),",")
-else
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+  execute "autocmd BufNewFile,BufRead " . g:source_exts_str 
+              \ " let &colorcolumn='80,'.join(range(120,999),',')"
 endif
 
 
@@ -58,7 +71,7 @@ endif
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ignore compiled files
-set wildignore=*.o,*~,*.pyc
+set wildignore=g:tmp_build_exts_str
 
 "Always show current position
 set ruler
@@ -194,9 +207,6 @@ nnoremap <leader>m i<C-m><ESC>l
 nnoremap <leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
 nnoremap <leader>S :%s/\<<C-r><C-w>\>//g<Left><Left>
 
-" Open explorer at file folder
-nnoremap <leader>e :Explore "expand('%:p:h')"<CR>
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom commands
@@ -240,8 +250,12 @@ vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
 set foldmethod=indent
 set foldlevel=99
 
-" Python - PEP8
-autocmd BufNewFile,BufRead *.py
+" Web
+autocmd BufNewFile,BufRead *.vue setfiletype html
+autocmd BufNewFile,BufRead *.jsm,*.jsx setfiletype javascript
+
+" PEP8 style
+execute "autocmd BufNewFile,BufRead " . g:source_g1_exts_str . "
     \ set tabstop=4 |
     \ set softtabstop=4 |
     \ set shiftwidth=4 |
@@ -249,45 +263,18 @@ autocmd BufNewFile,BufRead *.py
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix |
-    \ set encoding=utf-8
+    \ set encoding=utf-8"
 
-" Web
-autocmd BufNewFile,BufRead *.vue setfiletype html
-autocmd BufNewFile,BufRead *.jsm,*.jsx setfiletype javascript
-autocmd BufNewFile,BufRead *.js,*.html,*.css,*.vue,*.ts,*.json
+" Any other sources
+execute "autocmd BufNewFile,BufRead " . g:source_g2_exts_str . ",". g:source_web_exts_str . "
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth=2 |
+    \ set textwidth=79 |
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix |
-    \ set encoding=utf-8
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Keyboard trick
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-func! s:caps_as_escape ()
-    if has('unix')
-        silent execute '!setxkbmap' '-option' 'caps:escape'
-    else
-        silent execute '!reg' 'add' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map' '/t' 'REG_BINARY' '/d' '00000000000000000200000001003a0000000000'
-    endif
-endfunc
-
-func! s:reset_caps ()
-    if has('unix')
-        silent execute '!setxkbmap' '-option'
-    else
-        silent execute '!reg' 'delete' 'HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout' '/v' 'Scancode Map'
-    endif
-endfunc
-
-" autocmd VimEnter * :call s:caps_as_escape()
-" autocmd VimLeave * :call s:reset_caps()
-" autocmd FocusGained * :call s:caps_as_escape()
-" autocmd FocusLost * :call s:reset_caps()
+    \ set encoding=utf-8 "
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -300,7 +287,8 @@ func! DeleteTrailingWS()
     %s/\s\+$//ge
     exe "normal `z"
 endfunc
-autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue,*.json,*.ts :call DeleteTrailingWS()
+
+autocmd BufWrite g:source_exts_str :call DeleteTrailingWS()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -309,14 +297,14 @@ autocmd BufWrite *.py,*.cpp,*.h,*.js,*.css,*.html,*.vue,*.json,*.ts :call Delete
 
 """"""""""
 " netrw
-let g:netrw_liststyle = 3 " tree-view
-let g:netrw_banner = 0    " hide banner
+let g:netrw_liststyle=3 " tree-view
+let g:netrw_banner=0    " hide banner
 
 
 """""""""""""""
 " YouCompleteMe
 " https://github.com/Valloric/YouCompleteMe
-"let g:ycm_rust_src_path="/home/v/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
+let g:ycm_rust_src_path="~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -363,9 +351,9 @@ vnoremap <C-Down> ]egv
 " Vim-racer for RLS (rust)
 " https://github.com/rust-lang-nursery/rls
 " https://github.com/racer-rust/vim-racer
-" set hidden
-" let g:racer_cmd="/home/v/.cargo/bin/racer"
-" let g:racer_experimental_completer=1
+set hidden
+let g:racer_cmd="/home/v/.cargo/bin/racer"
+let g:racer_experimental_completer=1
 
 """"""""
 " Vim-Easy-Align
@@ -390,6 +378,13 @@ let g:abolish_save_file=expand("/dev/null")
 " Session Man
 " https://github.com/vim-scripts/sessionman.vim
 let g:sessionman_save_on_exit=0
+
+"""""""
+" Notes
+" https://github.com/xolox/vim-notes
+let g:notes_directories=[ "~/.vim/notes" ]
+let g:notes_suffix=".txt"
+let g:notes_title_sync="yes"
 
 """""""
 " CtrlP
