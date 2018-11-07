@@ -346,13 +346,21 @@ autocmd BufWrite g:source_exts_str :call DeleteTrailingWS()
 " 
 " Notes            ⇒ Notes manager
 "   https://github.com/xolox/vim-notes
+"   dep: [https://github.com/xolox/vim-misc]
 "
 " MRU              ⇒ Most recently used files
 "   https://github.com/yegappan/mru
-"               
+"   
+"                    
+"              --- Language Server Protocol ---
 "
-" # Dependencies
-"  https://github.com/xolox/vim-misc
+" vim-lsp          ⇒ LSP support
+"   https://github.com/prabirshrestha/vim-lsp            
+"   dep: [https://github.com/prabirshrestha/asyncomplete.vim, 
+"         https://github.com/prabirshrestha/async.vim]
+"   [base]: https://github.com/prabirshrestha/asyncomplete-lsp.vim
+"   [file]: https://github.com/prabirshrestha/asyncomplete-file.vim
+"   [rust]: https://github.com/keremc/asyncomplete-racer.vim
 "
 "                 ### PLUGIN SETTINGS ###
 
@@ -404,6 +412,35 @@ let g:notes_directories=[ "~/.vim/notes" ]
 let g:notes_suffix=".txt"
 let g:notes_title_sync="yes"
 
+
+"              --- Language Server Protocol ---
+"" vim-lsp
+if executable('pyls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+" Rust (via rls)
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Cargo.toml'))},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+" Completion of file path
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('asyncomplete#sources#file#completor')
+    \ }))
+" Completion of rust (using racer)
+autocmd User asyncomplete_setup call asyncomplete#register_source(
+    \ asyncomplete#sources#racer#get_source_options())
 
 """""""
 " CppDev (Own plugin)
