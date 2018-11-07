@@ -1,1 +1,1 @@
-/home/v/dev-files/_home_user_/.vimrc
+/home/v/.vimrc
