@@ -133,12 +133,6 @@ if has("neovim")
     set termguicolors
 endif
 
-" UTF8 is life
-set encoding=utf8
-
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Anti-loss of work
@@ -154,7 +148,12 @@ set swapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" UTF8 is life
+set encoding=utf8
+
+" Use Unix as the standard file type
 set fileformat=unix
+set fileformats=unix,dos,mac
 
 " Use spaces instead of tabs
 set expandtab
@@ -322,7 +321,7 @@ autocmd BufWrite g:source_exts_str :call DeleteTrailingWS()
 "   https://github.com/scrooloose/nerdtree
 "
 "
-"                   --- Editing ---
+"                    --- Editing ---
 "
 " NERDCommenter    ⇒ Comment support
 "   https://github.com/scrooloose/nerdcommenter
@@ -351,6 +350,9 @@ autocmd BufWrite g:source_exts_str :call DeleteTrailingWS()
 " MRU              ⇒ Most recently used files
 "   https://github.com/yegappan/mru
 "               
+"
+" # Dependencies
+"  https://github.com/xolox/vim-misc
 "
 "                 ### PLUGIN SETTINGS ###
 
