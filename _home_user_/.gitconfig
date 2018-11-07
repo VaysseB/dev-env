@@ -1,6 +1,3 @@
-[user]
-    email = you@example.com
-    name = My name
 [core]
     editor = vim
 [alias]
